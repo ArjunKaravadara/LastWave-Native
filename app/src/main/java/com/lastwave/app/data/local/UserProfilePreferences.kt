@@ -6,11 +6,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,7 +25,6 @@ data class UserProfileData(
 @Singleton
 class UserProfilePreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val externalScope: CoroutineScope,
 ) {
     private object Keys {
         val DISPLAY_NAME = stringPreferencesKey("akwave_display_name")
@@ -36,7 +32,7 @@ class UserProfilePreferences @Inject constructor(
         val SETUP_COMPLETE = booleanPreferencesKey("akwave_profile_setup_complete")
     }
 
-    val profile: StateFlow<UserProfileData> = dataStore.data
+    val profile: Flow<UserProfileData> = dataStore.data
         .recoverPreferences("UserProfilePreferences")
         .map { p ->
             UserProfileData(
@@ -45,11 +41,7 @@ class UserProfilePreferences @Inject constructor(
                 setupComplete = p.readSafely(Keys.SETUP_COMPLETE) ?: false,
                 isLoaded = true,
             )
-        }.stateIn(
-            scope = externalScope,
-            started = SharingStarted.Eagerly,
-            initialValue = UserProfileData(),
-        )
+        }
 
     suspend fun saveProfile(displayName: String, avatarIndex: Int) {
         dataStore.edit { p ->
