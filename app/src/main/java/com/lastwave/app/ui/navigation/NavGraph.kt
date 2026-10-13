@@ -28,6 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lastwave.app.data.model.AuthState
 import com.lastwave.app.ui.auth.AuthViewModel
 import com.lastwave.app.ui.auth.LoginScreen
+import com.lastwave.app.ui.auth.ProfileSetupScreen
+import com.lastwave.app.data.local.UserProfilePreferences
 import com.lastwave.app.ui.settings.SettingsScreen
 import com.lastwave.app.ui.search.SearchScreen
 import com.lastwave.app.ui.discover.DiscoverScreen
@@ -215,14 +217,15 @@ fun LastWaveNavHost(
             val webAuthState by authViewModel.webAuthState.collectAsStateWithLifecycle()
 
             // YouTube Music-first onboarding: any onboarded signal (Last.fm
-            // session, YT connection, or guest flag) skips straight to
+            // session, YT connection, or guest flag) goes to ProfileSetup
+            // first (new users create name+avatar there), which forwards to
             // MainShell. YT login returns here via YouTubeLogin's onConnected
-            // pop, then this effect immediately forwards to MainShell.
+            // pop, then this effect immediately forwards onward.
             LaunchedEffect(gateTarget, webAuthState) {
                 if (gateTarget == LaunchGateViewModel.GateTarget.MainShell &&
                     webAuthState == com.lastwave.app.ui.auth.WebAuthState.Idle
                 ) {
-                    navController.navigate(Screen.MainShell.route) {
+                    navController.navigate(Screen.ProfileSetup.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
@@ -253,6 +256,31 @@ fun LastWaveNavHost(
         // (profile icon / search icon / discover icon), on this same root
         // nav controller, so they can pop back cleanly and (on log out /
         // clear session) return all the way to Login.
+        composable(Screen.ProfileSetup.route) {
+            val setupViewModel: ProfileSetupViewModel = hiltViewModel()
+            val profile by setupViewModel.profilePrefs.profile.collectAsStateWithLifecycle()
+
+            // Returning users who already finished setup skip straight ahead.
+            LaunchedEffect(profile.isLoaded, profile.setupComplete) {
+                if (profile.isLoaded && profile.setupComplete) {
+                    navController.navigate(Screen.MainShell.route) {
+                        popUpTo(Screen.ProfileSetup.route) { inclusive = true }
+                    }
+                }
+            }
+
+            if (profile.isLoaded && !profile.setupComplete) {
+                ProfileSetupScreen(
+                    onComplete = { name, avatarIndex ->
+                        setupViewModel.saveProfile(name, avatarIndex)
+                        navController.navigate(Screen.MainShell.route) {
+                            popUpTo(Screen.ProfileSetup.route) { inclusive = true }
+                        }
+                    },
+                )
+            }
+        }
+
         composable(Screen.MainShell.route) {
             MainShell(
                 onOpenSettings = {
