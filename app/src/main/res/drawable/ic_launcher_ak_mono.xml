@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- AKWave monochrome icon for Material You themed icons (Android 13+).
+         Single-color AK silhouette, strictly inside the 72dp safe zone. -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="15"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M33,77 L48,31 L63,77" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="11"
+        android:strokeLineCap="round"
+        android:pathData="M39,61 L57,61" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="15"
+        android:strokeLineCap="round"
+        android:pathData="M72,31 L72,77" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="15"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M72,54 L86,31 M72,54 L86,77" />
+</vector>
