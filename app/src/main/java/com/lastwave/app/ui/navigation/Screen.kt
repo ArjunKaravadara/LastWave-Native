@@ -9,6 +9,7 @@ package com.lastwave.app.ui.navigation
 sealed class Screen(val route: String) {
     data object Splash : Screen("splash")
     data object Login : Screen("login")
+    data object ProfileSetup : Screen("profile_setup")
     data object MainShell : Screen("main_shell")
 
     // Bottom-nav swipeable tabs (Home module wires these + the pager together)
