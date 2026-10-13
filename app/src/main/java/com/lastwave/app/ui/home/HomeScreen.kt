@@ -176,6 +176,10 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    // AKWave theme presets: palette button in top bar opens the sheet
+    var showThemeSheet by remember { mutableStateOf(false) }
+    val settingsViewModel: com.lastwave.app.ui.settings.SettingsViewModel = hiltViewModel()
+
     LaunchedEffect(viewModel) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.pollWhileActive()
@@ -194,6 +198,11 @@ fun HomeScreen(
                     actions = {
                         HeaderActionIcon(Icons.Filled.Download, "Downloads", onOpenDownloads)
                         HeaderActionIcon(Icons.Filled.Search, "Search", onOpenSearch)
+                        HeaderActionIcon(
+                            androidx.compose.material.icons.Icons.Filled.Palette,
+                            "Themes",
+                            { showThemeSheet = true },
+                        )
                         IconButton(onClick = onOpenSettings) {
                             ProfileAvatar(avatarUrl = uiState.stats?.avatarUrl, modifier = Modifier.size(38.dp))
                         }
@@ -423,6 +432,23 @@ fun HomeScreen(
             capabilities = com.lastwave.app.ui.common.TrackMenuCapabilities(showCopyActions = true, showDeleteScrobble = true),
             playbackSourceLabel = "Home",
             onDismiss = { menuTrack = null },
+        )
+    }
+
+    // AKWave theme preset bottom sheet
+    if (showThemeSheet) {
+        com.lastwave.app.ui.theme.ThemePresetSheet(
+            onDismiss = { showThemeSheet = false },
+            onSelectPreset = { preset ->
+                settingsViewModel.setManualAccent(preset.seedColor)
+                settingsViewModel.setThemeMode(preset.themeMode)
+                showThemeSheet = false
+            },
+            onSelectDynamic = {
+                settingsViewModel.setAccentMode(com.lastwave.app.data.local.AccentMode.DYNAMIC)
+                showThemeSheet = false
+            },
+            isDynamicSelected = false,
         )
     }
 
