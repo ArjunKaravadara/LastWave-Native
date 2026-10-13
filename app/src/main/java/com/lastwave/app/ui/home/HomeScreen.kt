@@ -176,13 +176,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // AKWave theme presets: palette button in top bar opens the sheet
-    var showThemeSheet by remember { mutableStateOf(false) }
-    val settingsViewModel: com.lastwave.app.ui.settings.SettingsViewModel = hiltViewModel()
 
-    // AKWave profile: avatar button opens profile setup sheet
-    var showProfileSheet by remember { mutableStateOf(false) }
-    val profileViewModel: com.lastwave.app.ui.auth.ProfileSetupViewModel = hiltViewModel()
 
     LaunchedEffect(viewModel) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -202,17 +196,8 @@ fun HomeScreen(
                     actions = {
                         HeaderActionIcon(Icons.Filled.Download, "Downloads", onOpenDownloads)
                         HeaderActionIcon(Icons.Filled.Search, "Search", onOpenSearch)
-                        HeaderActionIcon(
-                            androidx.compose.material.icons.Icons.Filled.Palette,
-                            "Themes",
-                            { showThemeSheet = true },
-                        )
-                        HeaderActionIcon(
-                            androidx.compose.material.icons.Icons.Filled.Settings,
-                            "Settings",
-                            onOpenSettings,
-                        )
-                        IconButton(onClick = { showProfileSheet = true }) {
+
+                        IconButton(onClick = onOpenSettings) {
                             ProfileAvatar(avatarUrl = uiState.stats?.avatarUrl, modifier = Modifier.size(38.dp))
                         }
                     },
@@ -441,50 +426,6 @@ fun HomeScreen(
             capabilities = com.lastwave.app.ui.common.TrackMenuCapabilities(showCopyActions = true, showDeleteScrobble = true),
             playbackSourceLabel = "Home",
             onDismiss = { menuTrack = null },
-        )
-    }
-
-    // AKWave theme preset bottom sheet
-    if (showThemeSheet) {
-        com.lastwave.app.ui.theme.ThemePresetSheet(
-            onDismiss = { showThemeSheet = false },
-            onSelectPreset = { preset ->
-                settingsViewModel.setManualAccent(preset.seedColor)
-                settingsViewModel.setThemeMode(preset.themeMode)
-                showThemeSheet = false
-            },
-            onSelectDynamic = {
-                settingsViewModel.setAccentMode(com.lastwave.app.data.local.AccentMode.DYNAMIC)
-                showThemeSheet = false
-            },
-            isDynamicSelected = false,
-        )
-    }
-
-    // AKWave profile setup sheet (avatar + name)
-    if (showProfileSheet) {
-        androidx.compose.ui.window.Dialog(
-            onDismissRequest = { showProfileSheet = false },
-        ) {
-            com.lastwave.app.ui.auth.ProfileSetupScreen(
-                onComplete = { name, avatarIndex ->
-                    profileViewModel.saveProfile(name, avatarIndex)
-                    showProfileSheet = false
-                },
-            )
-        }
-    }
-
-    // Creator credit footer
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            "Creator @arjun_karavadara",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-            modifier = Modifier.padding(vertical = 8.dp),
         )
     }
 
