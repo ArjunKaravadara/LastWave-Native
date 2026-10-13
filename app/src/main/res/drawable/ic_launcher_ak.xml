@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- AKWave launcher foreground: line-art "AK" with a sound wave.
+         Bold geometric letterforms, sharp edges, black on transparent. -->
+    <!-- Letter A -->
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M30,80 L46,28 L62,80" />
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:pathData="M37,64 L55,64" />
+    <!-- Letter K -->
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:pathData="M72,28 L72,80" />
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M72,54 L90,28 M72,54 L90,80" />
+    <!-- Sound wave through the middle -->
+    <path
+        android:strokeColor="#111111"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:pathData="M12,54 q5,-7 10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0" />
+</vector>
