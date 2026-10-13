@@ -3,41 +3,42 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- AKWave launcher foreground: bold rounded "AK" with a sound wave
-         cutting through. Content inside the 72dp safe zone. -->
+    <!-- AKWave launcher foreground: bold rounded "AK" with a sound wave.
+         ALL artwork strictly inside the 72dp safe zone (18-90) so nothing
+         gets cut off by the launcher mask. -->
     <!-- Letter A: two bold diagonals + crossbar -->
     <path
         android:strokeColor="#111111"
-        android:strokeWidth="17"
+        android:strokeWidth="15"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
-        android:pathData="M31,79 L48,29 L65,79" />
+        android:pathData="M33,77 L48,31 L63,77" />
     <path
         android:strokeColor="#111111"
-        android:strokeWidth="13"
+        android:strokeWidth="11"
         android:strokeLineCap="round"
-        android:pathData="M38,62 L58,62" />
-    <!-- Letter K: vertical + two diagonals -->
+        android:pathData="M39,61 L57,61" />
+    <!-- Letter K: vertical + two diagonals (kept inside safe zone) -->
     <path
         android:strokeColor="#111111"
-        android:strokeWidth="17"
+        android:strokeWidth="15"
         android:strokeLineCap="round"
-        android:pathData="M75,29 L75,79" />
+        android:pathData="M72,31 L72,77" />
     <path
         android:strokeColor="#111111"
-        android:strokeWidth="17"
+        android:strokeWidth="15"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
-        android:pathData="M75,54 L93,29 M75,54 L93,79" />
-    <!-- Sound wave: white halo first (cuts through letters), then black wave -->
+        android:pathData="M72,54 L86,31 M72,54 L86,77" />
+    <!-- Sound wave: white halo first, then black wave — inside safe zone -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="10"
+        android:strokeWidth="9"
         android:strokeLineCap="round"
-        android:pathData="M14,54 q5,-8 10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0" />
+        android:pathData="M20,54 q4,-7 8,0 t8,0 t8,0 t8,0 t8,0 t8,0" />
     <path
         android:strokeColor="#111111"
-        android:strokeWidth="4.5"
+        android:strokeWidth="4"
         android:strokeLineCap="round"
-        android:pathData="M14,54 q5,-8 10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0" />
+        android:pathData="M20,54 q4,-7 8,0 t8,0 t8,0 t8,0 t8,0 t8,0" />
 </vector>
