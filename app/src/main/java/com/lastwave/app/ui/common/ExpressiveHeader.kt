@@ -1,5 +1,7 @@
 package com.lastwave.app.ui.common
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -81,6 +84,32 @@ fun ExpressiveHeader(
 ) {
     val glow = MaterialTheme.colorScheme.primary
     val secondaryGlow = MaterialTheme.colorScheme.tertiary
+    // AKWave rebrand: the home tab passes title "Home" — show the AKWave
+    // branding with the creator handle underneath it instead.
+    val isHomeBrand = title == "Home"
+    val displayTitle = if (isHomeBrand) "AKWave" else title
+    val displaySubtitle = if (isHomeBrand) "@arjun_karavadara" else subtitle
+    val context = LocalContext.current
+    val displayOnSubtitleClick: (() -> Unit)? = if (isHomeBrand) {
+        {
+            val webIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.instagram.com/arjun_karavadara/"),
+            )
+            try {
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("instagram://user?username=arjun_karavadara"),
+                    ),
+                )
+            } catch (_: Exception) {
+                context.startActivity(webIntent)
+            }
+        }
+    } else {
+        onSubtitleClick
+    }
     Box(modifier.fillMaxWidth().zIndex(1f)) {
         Surface(
             shape = HeaderShape,
@@ -116,25 +145,25 @@ fun ExpressiveHeader(
 
                     Column(Modifier.weight(1f)) {
                         Text(
-                            title,
+                            displayTitle,
                             style = if (onBack != null) MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             softWrap = false,
                             overflow = TextOverflow.Ellipsis,
                         )
-                        subtitle?.let {
+                        displaySubtitle?.let {
                             Text(
                                 it,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = if (onSubtitleClick != null) {
+                                modifier = if (displayOnSubtitleClick != null) {
                                     Modifier.clickable(
                                         indication = null,
                                         interactionSource = remember { MutableInteractionSource() },
-                                        onClick = onSubtitleClick,
+                                        onClick = displayOnSubtitleClick,
                                     )
                                 } else {
                                     Modifier
