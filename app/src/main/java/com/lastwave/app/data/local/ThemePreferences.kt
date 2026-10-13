@@ -36,7 +36,7 @@ data class ThemePrefs(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val accentColor: String = "#E03030",
     val accentLight: String = "#FF6060",
-    val accentMode: AccentMode = AccentMode.MANUAL,
+    val accentMode: AccentMode = AccentMode.DYNAMIC,
     val amoled: Boolean = false,
     /** Experimental iOS-style liquid-glass materials. Off by default — the
      *  classic opaque look stays untouched until the user opts in. */
