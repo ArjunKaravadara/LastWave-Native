@@ -258,7 +258,9 @@ fun LastWaveNavHost(
         // clear session) return all the way to Login.
         composable(Screen.ProfileSetup.route) {
             val setupViewModel: ProfileSetupViewModel = hiltViewModel()
-            val profile by setupViewModel.profilePrefs.profile.collectAsStateWithLifecycle()
+            val profile by setupViewModel.profilePrefs.profile.collectAsStateWithLifecycle(
+                initialValue = com.lastwave.app.data.local.UserProfileData()
+            )
 
             // Returning users who already finished setup skip straight ahead.
             LaunchedEffect(profile.isLoaded, profile.setupComplete) {
