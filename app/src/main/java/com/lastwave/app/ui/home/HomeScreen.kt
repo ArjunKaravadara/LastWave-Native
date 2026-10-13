@@ -180,6 +180,10 @@ fun HomeScreen(
     var showThemeSheet by remember { mutableStateOf(false) }
     val settingsViewModel: com.lastwave.app.ui.settings.SettingsViewModel = hiltViewModel()
 
+    // AKWave profile: avatar button opens profile setup sheet
+    var showProfileSheet by remember { mutableStateOf(false) }
+    val profileViewModel: com.lastwave.app.ui.auth.ProfileSetupViewModel = hiltViewModel()
+
     LaunchedEffect(viewModel) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.pollWhileActive()
@@ -203,7 +207,12 @@ fun HomeScreen(
                             "Themes",
                             { showThemeSheet = true },
                         )
-                        IconButton(onClick = onOpenSettings) {
+                        HeaderActionIcon(
+                            androidx.compose.material.icons.Icons.Filled.Settings,
+                            "Settings",
+                            onOpenSettings,
+                        )
+                        IconButton(onClick = { showProfileSheet = true }) {
                             ProfileAvatar(avatarUrl = uiState.stats?.avatarUrl, modifier = Modifier.size(38.dp))
                         }
                     },
@@ -449,6 +458,33 @@ fun HomeScreen(
                 showThemeSheet = false
             },
             isDynamicSelected = false,
+        )
+    }
+
+    // AKWave profile setup sheet (avatar + name)
+    if (showProfileSheet) {
+        androidx.compose.ui.window.Dialog(
+            onDismissRequest = { showProfileSheet = false },
+        ) {
+            com.lastwave.app.ui.auth.ProfileSetupScreen(
+                onComplete = { name, avatarIndex ->
+                    profileViewModel.saveProfile(name, avatarIndex)
+                    showProfileSheet = false
+                },
+            )
+        }
+    }
+
+    // Creator credit footer
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            "Creator @arjun_karavadara",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier.padding(vertical = 8.dp),
         )
     }
 
